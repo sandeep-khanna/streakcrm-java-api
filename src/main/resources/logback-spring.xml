@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<include resource="org/springframework/boot/logging/logback/base.xml" />
+	<!-- Stop output INFO at start -->
+	<statusListener class="ch.qos.logback.core.status.NopStatusListener" />
+	<appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<Pattern>%date{MMM d HH:mm:ss} %p %c{10}[%X{process_id}]: %m%n
+			</Pattern>
+		</encoder>
+	</appender>
+	<appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<File>streakcrmapi.log</File>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!-- weekly rollover -->
+			<fileNamePattern>streakcrmapi.%d{yyyy-ww}.log</fileNamePattern>
+		</rollingPolicy>
+		<encoder>
+			<Pattern>%date{MMM d HH:mm:ss} %p %c{10}[%X{process_id}]: %m%n
+			</Pattern>
+		</encoder>
+	</appender>
+	<springProfile name="dev">
+		<logger name="com.streak" level="TRACE" additivity="false">
+			<appender-ref ref="console" />
+		</logger>
+	</springProfile>
+	<springProfile name="test">
+		<logger name="com.streak" level="DEBUG" additivity="false">
+			<appender-ref ref="console" />
+		</logger>
+	</springProfile>
+	<springProfile name="production">
+		<logger name="com.streak" level="INFO" additivity="false">
+			<appender-ref ref="file" />
+		</logger>
+	</springProfile>
+	<root level="ERROR" />
+</configuration>
